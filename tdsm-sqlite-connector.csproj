@@ -8,6 +8,8 @@
     <RootNamespace>TDSM.Data.SQLite</RootNamespace>
     <AssemblyName>tdsm-sqlite-connector</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -37,11 +39,11 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Linq" />
-    <Reference Include="TDSM.API">
-      <HintPath>..\Binaries\TDSM.API.dll</HintPath>
-    </Reference>
     <Reference Include="tdsm">
-      <HintPath>..\Binaries\tdsm.exe</HintPath>
+      <HintPath>..\Terraria-s-Dedicated-Server-Mod\Binaries\tdsm.exe</HintPath>
+    </Reference>
+    <Reference Include="TDSM.API">
+      <HintPath>..\Terraria-s-Dedicated-Server-Mod\Binaries\TDSM.API.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
