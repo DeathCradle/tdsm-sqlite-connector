@@ -108,7 +108,10 @@ namespace TDSM.Data.SQLite
                 cmd.CommandType = builder.CommandType;
                 cmd.Parameters.AddRange(sb.Parameters.ToArray());
 
-                return (T)cmd.ExecuteScalar();
+				var res = cmd.ExecuteScalar();
+				if (null == res) return default(T);
+
+				return (T)res;
             }
         }
 
