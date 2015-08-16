@@ -108,10 +108,10 @@ namespace TDSM.Data.SQLite
                 cmd.CommandType = builder.CommandType;
                 cmd.Parameters.AddRange(sb.Parameters.ToArray());
 
-				var res = cmd.ExecuteScalar();
-				if (null == res) return default(T);
+				var res = cmd.ExecuteScalar ();
+				if (null == res || Convert.IsDBNull (res)) return default(T);
 
-				return (T)res;
+				return (T)GetTypeValue (typeof(T), res);
             }
         }
 
@@ -165,13 +165,27 @@ namespace TDSM.Data.SQLite
                         }
 
                         var fld = tp.GetField(col.ColumnName);
-                        if (fld != null)
-                            fld.SetValue(boxed, GetTypeValue(fld.FieldType, val));
+						if (fld != null)
+						{
+							fld.SetValue (boxed, GetTypeValue (fld.FieldType, val));
+							if (val != null && fld.FieldType != val.GetType ())
+							{
+								//									ProgramLog.Log ("Converting type {0}->{1}", val.GetType ().Name, fld.FieldType.Name);
+								val = GetTypeValue (fld.FieldType, val);
+							}
+						}
                         else
                         {
                             var prop = tp.GetProperty(col.ColumnName);
-                            if (prop != null)
-                                prop.SetValue(boxed, GetTypeValue(prop.PropertyType, val), null);
+							if (prop != null)
+							{
+								if (val != null && prop.PropertyType != val.GetType ())
+								{
+									//									ProgramLog.Log ("Converting type {0}->{1}", val.GetType ().Name, prop.PropertyType.Name);
+									val = GetTypeValue (prop.PropertyType, val);
+								}
+								prop.SetValue (boxed, GetTypeValue (prop.PropertyType, val), null);
+							}
                         }
                     }
                     records[x] = (T)boxed;
@@ -181,17 +195,39 @@ namespace TDSM.Data.SQLite
             }
 
             return null;
-        }
+		}
 
-        static object GetTypeValue(Type type, object value)
-        {
-            if (type == typeof(Byte))
-                return Convert.ToByte(value);
-            if (type == typeof(Int32))
-                return Convert.ToInt32(value);
+		static object GetTypeValue (Type type, object value)
+		{
+			if (type == typeof(Microsoft.Xna.Framework.Color) || type.IsAssignableFrom (typeof(Microsoft.Xna.Framework.Color)))
+			{
+				if (value is UInt32) return Tools.Encoding.DecodeColor ((uint)value);
+				if (value is Int64) return Tools.Encoding.DecodeColor ((uint)(long)value);
+			}
+			else if (type == typeof(bool[]))
+			{
+				if (value is Byte) return Tools.Encoding.DecodeBits ((byte)value);
+				if (value is Int16) return Tools.Encoding.DecodeBits ((short)value);
+				if (value is Int32) return Tools.Encoding.DecodeBits ((int)value);
+				if (value is Int64) return Tools.Encoding.DecodeBits ((int)(long)value);
+			}
+			else if (type == typeof(Byte))
+				return Convert.ToByte (value);
+			else if (type == typeof(Int16))
+				return Convert.ToInt16 (value);
+			else if (type == typeof(Int32))
+				return Convert.ToInt32 (value);
+			else if (type == typeof(Int64))
+				return Convert.ToInt64 (value);
+			else if (type == typeof(UInt16))
+				return Convert.ToUInt16 (value);
+			else if (type == typeof(UInt32))
+				return Convert.ToUInt32 (value);
+			else if (type == typeof(Int64))
+				return Convert.ToUInt64 (value);
 
-            return value;
-        }
+			return Convert.ChangeType(value, type);
+		}
 
         public override string ToString()
         {
