@@ -1,8 +1,8 @@
 ﻿using System;
-using TDSM.API.Plugin;
-using TDSM.API.Data;
-using TDSM.API.Logging;
-using TDSM.API;
+using OTA.Plugin;
+using OTA.Data;
+using OTA.Logging;
+using OTA;
 using System.IO;
 
 namespace TDSM.Data.SQLite
@@ -90,7 +90,7 @@ namespace TDSM.Data.SQLite
         [Hook]
         void OnStateChange(ref HookContext ctx, ref HookArgs.ServerStateChange args)
         {
-            if (args.ServerChangeState == TDSM.API.ServerState.Initialising)
+            if (args.ServerChangeState == OTA.ServerState.Initialising)
             {
                 ProgramLog.Plugin.Log("SQLite connector is: " + (_connector == null ? "disabled" : "enabled"));
             }

@@ -1,10 +1,10 @@
 ﻿using System;
-using TDSM.API.Data;
+using OTA.Data;
 using System.Data;
-using TDSM.API;
+using OTA;
 using System.Collections.Generic;
 using Mono.Data.Sqlite;
-using TDSM.API.Logging;
+using OTA.Logging;
 
 namespace TDSM.Data.SQLite
 {

@@ -1,6 +1,6 @@
 ﻿using System;
-using TDSM.API.Data;
-using TDSM.API.Logging;
+using OTA.Data;
+using OTA.Logging;
 using System.Linq;
 
 namespace TDSM.Data.SQLite

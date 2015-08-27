@@ -39,11 +39,11 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Linq" />
-    <Reference Include="tdsm">
-      <HintPath>..\Terraria-s-Dedicated-Server-Mod\Binaries\tdsm.exe</HintPath>
+    <Reference Include="TerrariaServer">
+      <HintPath>..\Terraria-s-Dedicated-Server-Mod\Open-Terraria-API\Binaries\TerrariaServer.exe</HintPath>
     </Reference>
-    <Reference Include="TDSM.API">
-      <HintPath>..\Terraria-s-Dedicated-Server-Mod\Binaries\TDSM.API.dll</HintPath>
+    <Reference Include="OTA">
+      <HintPath>..\Terraria-s-Dedicated-Server-Mod\Open-Terraria-API\Binaries\OTA.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

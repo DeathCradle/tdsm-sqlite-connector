@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
-using TDSM.API.Data;
-using TDSM.API;
-using TDSM.API.Logging;
+using OTA.Data;
+using OTA;
+using OTA.Logging;
 
 namespace TDSM.Data.SQLite
 {
@@ -328,14 +328,14 @@ namespace TDSM.Data.SQLite
             return _groups.Groups.Select(x => x.Name).OrderBy(x => x).ToArray();
         }
 
-        TDSM.API.Data.PermissionNode[] IPermissionHandler.GroupNodes(string groupName)
+        OTA.Data.PermissionNode[] IPermissionHandler.GroupNodes(string groupName)
         {
             var grp = PermissionsHandler.FindGroup(groupName);
             return (
                 from x in _groupPerms.GroupPermissions
                          join y in _nodes.Nodes on x.PermissionId equals y.Id
                          where x.GroupId == grp.Id
-                         select new TDSM.API.Data.PermissionNode()
+                         select new OTA.Data.PermissionNode()
             {
                 Node = y.Node,
                 Deny = y.Deny
@@ -399,22 +399,33 @@ namespace TDSM.Data.SQLite
                          where x.UserId == usr.Value.Id
                          select y.Name
             ).ToArray();
-        }
+		}
 
-        TDSM.API.Data.PermissionNode[] IPermissionHandler.UserNodes(string username)
-        {
-            var usr = AuthenticatedUsers.GetUser(username);
-            return (
-                from x in _userPerms.UserNodes
-                         join y in _nodes.Nodes on x.PermissionId equals y.Id
-                         where x.UserId == usr.Value.Id
-                         select new TDSM.API.Data.PermissionNode()
-            {
-                Node = y.Node,
-                Deny = y.Deny
-            }
-            ).ToArray();
-        }
+		OTA.Data.PermissionNode[] IPermissionHandler.UserNodes(string username)
+		{
+			var usr = AuthenticatedUsers.GetUser(username);
+			return (
+				from x in _userPerms.UserNodes
+				join y in _nodes.Nodes on x.PermissionId equals y.Id
+				where x.UserId == usr.Value.Id
+				select new OTA.Data.PermissionNode()
+			{
+				Node = y.Node,
+				Deny = y.Deny
+			}
+			).ToArray();
+		}
+
+		OTA.Data.Group IPermissionHandler.GetInheritedGroupForUser(string username)
+		{
+			var usr = AuthenticatedUsers.GetUser(username);
+			return (
+			    from x in _users.UserGroup
+			 join y in _groups.Groups on x.GroupId equals y.Id
+			 where x.UserId == usr.Value.Id
+			 select y
+			).FirstOrDefault ();
+		}
     }
 }
 
